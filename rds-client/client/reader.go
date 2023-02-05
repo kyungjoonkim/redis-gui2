@@ -1,4 +1,4 @@
-package rds_client
+package client
 
 import (
 	"bufio"
@@ -180,4 +180,3 @@ func readRESP(r *bufio.Scanner) (*Result, error) {
 
 	return nil, r.Err()
 }
-

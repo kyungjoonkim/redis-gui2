@@ -1,4 +1,4 @@
-package result_model
+package rmodel
 
 type RedisScanResult struct {
 	Success      bool     `json:"success"`

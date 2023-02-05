@@ -1,4 +1,4 @@
-package rds_client
+package client
 
 type Result struct {
 	content interface{}
@@ -6,4 +6,8 @@ type Result struct {
 
 func (r *Result) Content() interface{} {
 	return r.content
+}
+
+func (r *Result) ConvertList() []interface{} {
+	return r.content.([]interface{})
 }

@@ -1,4 +1,4 @@
-package rds_client
+package client
 
 import (
 	"encoding/base64"
@@ -25,8 +25,7 @@ func (w *Writer) WriteArray(values []interface{}) error {
 
 	valuesSize := int64(len(values))
 
-	if err := w.write(typeArray, []byte(strconv.FormatInt(valuesSize, 10)), separator);
-		err != nil {
+	if err := w.write(typeArray, []byte(strconv.FormatInt(valuesSize, 10)), separator); err != nil {
 		return err
 	}
 
@@ -76,5 +75,3 @@ func (w *Writer) write(messageType byte, contents ...[]byte) error {
 
 	return nil
 }
-
-

@@ -1,8 +1,9 @@
 package main
 
 import (
-	rds_client "changeme/rds-client"
-	result_model "changeme/rds-client/result-model"
+	"changeme/rds-client/model/bmodel"
+	result_model "changeme/rds-client/model/rmodel"
+	"changeme/rds-client/rctx"
 	"context"
 	"fmt"
 )
@@ -33,11 +34,11 @@ type LoginResult struct {
 	ErrorMessage string `json:"errorMessage"`
 }
 
-var rdsContext *rds_client.RedisClientContext
+var rdsContext rctx.RedisClientContext
 
 func (a *App) Login(ipAndPort string, password string) *LoginResult {
 	result := &LoginResult{}
-	rContext, err := rds_client.Connection(ipAndPort, password)
+	rContext, err := rctx.LoginRedisServer(ipAndPort, password)
 	if err != nil {
 		fmt.Println("fail :", err)
 		result.ErrorMessage = err.Error()
@@ -59,6 +60,9 @@ func (a *App) GetScanRedisKey(nodeIpAndPort string, cursor int64) *result_model.
 	return rdsContext.ScanRedisKeyInTargetNode(nodeIpAndPort, cursor)
 }
 
-func (a *App) GetRedisKeyData(nodeIpAndPort string, redisKey string) {
-	//return rdsContext.ScanRedisKeyInTargetNode(nodeIpAndPort, cursor)
+func (a *App) GetRedisKeyData(nodeIpAndPort string, redisKey string, start int64, end int64) *bmodel.RedisGetResModel {
+	fmt.Println("===GetRedisKeyData==")
+	fmt.Println("nodeIpAndPort:{}, redisKey:{}, start:{}, end:{} ", nodeIpAndPort, redisKey, start, end)
+	param := bmodel.NewRedisGetParamModel(redisKey, start, end)
+	return rdsContext.GetRedisKeyData(nodeIpAndPort, param)
 }

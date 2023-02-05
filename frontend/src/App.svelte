@@ -6,7 +6,7 @@
   import {GetScanRedisKey} from "../wailsjs/go/main/App.js";
   import {GetRedisKeyData} from "../wailsjs/go/main/App.js";
   import Modal from './modal/Modal.svelte';
-  import { fly } from 'svelte/transition';
+  import SortSetResultView from './resultView/SortSetResultView.svelte';
   import {LogPrint} from "../wailsjs/runtime/runtime.js";
 
   class NodeInfo {
@@ -115,31 +115,14 @@
     })
   }
 
+  let redisGetResult = {};
   function getRedisKeyData(nodeIpAndPort,redisKey){
-    // const nodeInfo = nodeIpInfoMap[nodeIpAndPort]
-    // if (nodeInfo == null) {
-    //   return;
-    // }
-    // if ( nodeInfo.isScanFinish() ){
-    //   return;
-    // }
-    //
-    // const strNodeAndIp = nodeInfo.getNodeIpAndPort();
-    // const scanCursor = nodeInfo.getScanCursor();
-    //
-    //
-    // GetRedisKeyData(strNodeAndIp,scanCursor).then( result =>{
-    //   // LogPrint(result)
-    //   if ( !result.success) {
-    //     return;
-    //   }
-    //
-    //   nodeInfo.setScanFinish(result.finish)
-    //   nodeInfo.setScanCursor(result.cursor);
-    //   nodeInfo.addRedisKey(result.keys);
-    //
-    //   nodeIpInfoMap[nodeIpAndPort] = nodeInfo
-    // })
+    let start = 0
+    GetRedisKeyData(nodeIpAndPort,redisKey,start,0).then( result => {
+      LogPrint(JSON.stringify(result))
+      redisGetResult = result
+    })
+
   }
 
 </script>
@@ -162,8 +145,7 @@
             {/if}
             {#each nodeIpInfoMap[nodeIp].getRedisKeys() as redisKey}
               <li style="margin-left: 2px;font-size: 10px; " >
-                <a href="#">{redisKey}</a>
-<!--                <a href="#" on:click={}>{redisKey}</a>-->
+                <a href="#" on:click={getRedisKeyData(nodeIp,redisKey)}>{redisKey}</a>
               </li>
             {/each}
           {/each}
@@ -183,7 +165,9 @@
       </div>
 
       <div class="result-div">
-
+        {#if redisGetResult.dataType === 'zset'}
+          <SortSetResultView redisResultValues="{redisGetResult.values}"/>
+        {/if}
       </div>
 
     </div>

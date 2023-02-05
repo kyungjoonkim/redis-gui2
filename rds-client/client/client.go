@@ -1,8 +1,7 @@
-package rds_client
+package client
 
 import (
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
 	"net"
 	"time"
@@ -46,15 +45,10 @@ func Connect(ctx context.Context, address string, passWord string) (*Client, err
 		}
 	}
 
-	result, err := client.Send([]interface{}{
-		"INFO",
-	})
-
+	_, err = client.Send([]interface{}{"PING"})
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(result.content)
 
 	return client, nil
 }

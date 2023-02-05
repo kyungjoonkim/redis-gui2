@@ -1,3 +1,26 @@
+export namespace bmodel {
+	
+	export class RedisGetResModel {
+	    dataType: string;
+	    redisKey: string;
+	    next: number;
+	    values: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new RedisGetResModel(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.dataType = source["dataType"];
+	        this.redisKey = source["redisKey"];
+	        this.next = source["next"];
+	        this.values = source["values"];
+	    }
+	}
+
+}
+
 export namespace main {
 	
 	export class LoginResult {
@@ -17,7 +40,7 @@ export namespace main {
 
 }
 
-export namespace result_model {
+export namespace rmodel {
 	
 	export class RedisScanResult {
 	    success: boolean;

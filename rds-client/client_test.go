@@ -3,7 +3,8 @@ package rds_client_test
 import (
 	"bufio"
 	"bytes"
-	rds_client "changeme/rds-client"
+	client2 "changeme/rds-client/client"
+	"changeme/rds-client/rctx"
 	"context"
 	"fmt"
 	"github.com/stretchr/testify/assert"
@@ -82,7 +83,7 @@ func TestConnect(t *testing.T) {
 
 	for _, ts := range tt {
 		t.Run(ts.name, func(t *testing.T) {
-			client, err := rds_client.Connect(context.Background(), "localhost:6379", "1111")
+			client, err := client2.Connect(context.Background(), "localhost:6379", "1111")
 			require.NoError(t, err)
 
 			defer client.Close()
@@ -100,23 +101,23 @@ func TestConnect(t *testing.T) {
 }
 func TestConnectClient(t *testing.T) {
 	//rds_client.Connection(context.Background(), "127.0.0.1:6379", "1111")
-	rContext, err := rds_client.Connection("localhost:6379", "")
+	rContext, err := rctx.LoginRedisServer("localhost:6379", "1111")
 	if err != nil {
 		return
 	}
-	defer rds_client.Close(rContext)
+	defer rContext.Close()
 	input := []interface{}{
 		"GET",
 		"test",
 	}
-	result, _ := rds_client.SendCommand(rContext, input)
+	result, _ := rContext.SendCommand(input)
 	fmt.Println(result.Content())
 
 }
 
 func TestConnectClient2(t *testing.T) {
 	//rds_client.Connection(context.Background(), "127.0.0.1:6379", "1111")
-	rContext, err := rds_client.Connection("localhost:6379", "")
+	rContext, err := rctx.LoginRedisServer("localhost:6379", "1111")
 	if err != nil {
 		return
 	}
@@ -128,7 +129,8 @@ func TestConnectClient2(t *testing.T) {
 
 func TestRedisKeyScan(t *testing.T) {
 	//rds_client.Connection(context.Background(), "127.0.0.1:6379", "1111")
-	rds_client.Connection("127.0.0.1:6379", "")
+	//rContext, err := rctx.LoginRedisServer("localhost:6379", "1111")
+	//rContext.Get()
 
 }
 
